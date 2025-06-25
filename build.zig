@@ -32,13 +32,13 @@ pub fn build(b: *std.Build) void {
 
     // step: default
     const platform = b.option(
-        enum { testing, ch58x, rp2040 },
+        enum { testing, ch58x, ch59x, rp2040 },
         "platform",
         "The platform to build for",
     ) orelse .testing;
 
     const target = switch (platform) {
-        .ch58x => std.zig.CrossTarget{
+        .ch58x, .ch59x => std.zig.CrossTarget{
             .cpu_arch = std.Target.Cpu.Arch.riscv32,
             .os_tag = std.Target.Os.Tag.freestanding,
             .cpu_model = .{ .explicit = &std.Target.riscv.cpu.generic_rv32 },
@@ -52,12 +52,14 @@ pub fn build(b: *std.Build) void {
     const root_path = switch (platform) {
         .testing => "src/platforms/testing/main.zig",
         .ch58x => "src/platforms/ch58x/main.zig",
+        .ch59x => "src/platforms/ch59x/main.zig",
         .rp2040 => "src/platforms/rp2040/main.zig",
     };
 
     const name = switch (platform) {
         .testing => "kirei-testing",
         .ch58x => "kirei-ch58x",
+        .ch59x => "kirei-ch59x",
         .rp2040 => "kirei-rp2040",
     };
 
@@ -177,6 +179,20 @@ pub fn build(b: *std.Build) void {
             }, &.{});
 
             exe.addIncludePath(.{ .path = "src/platforms/ch58x/lib" });
+        }
+
+        if (platform == .ch59x) {
+            const link_file_path = "src/platforms/ch59x/link.ld";
+            exe.setLinkerScriptPath(.{ .path = link_file_path });
+            exe.addAssemblyFile(.{ .path = "src/platforms/ch59x/startup.S" });
+
+            exe.addCSourceFiles(&.{
+                "src/platforms/ch58x/lib/libISP592.a",
+                "src/platforms/ch58x/lib/LIBCH59xBLE.a",
+                "src/platforms/ch58x/lib/calibration_lsi.c",
+            }, &.{});
+
+            exe.addIncludePath(.{ .path = "src/platforms/ch59x/lib" });
         }
 
         if (microzig_fw) |fw| {
