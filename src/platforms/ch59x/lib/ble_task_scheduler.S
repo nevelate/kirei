@@ -6,7 +6,7 @@
 
 .section	.highcode,"ax",@progbits
 .align 2
-.func
+//.func
 Ecall_M_Mode_Handler:
 Ecall_U_Mode_Handler:
 
@@ -49,11 +49,11 @@ Ecall_U_Mode_Handler:
 	addi sp, sp, 32*4
 
 	mret
-	.endfunc
+	//.endfunc
 
 .section	.highcode.LLE_IRQHandler,"ax",@progbits
 .align 2
-.func
+//.func
 LLE_IRQHandler:
 	addi sp, sp, -32*4
 
@@ -124,4 +124,4 @@ LLE_IRQHandler:
 	addi sp, sp, 32*4
 
 	mret
-	.endfunc
+	//.endfunc

@@ -1,6 +1,6 @@
 const common = @import("common.zig");
 
-const SleepWakeCtrl = packed struct(u8) {
+const SleepWakeCtrl = packed struct(u7) {
     usb: bool,
     __R0: bool,
     rtc: bool,

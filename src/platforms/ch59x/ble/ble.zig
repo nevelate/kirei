@@ -25,8 +25,12 @@ var ble_config: c.bleConfig_t = blk: {
     cfg.TxPower = @intFromEnum(config.ble.tx_power);
 
     cfg.SNVAddr = 0x8000 - 512; // Last 512 bytes of EEPROM
+    cfg.SNVBlock = 256;
+    cfg.SNVNum = 1;
     cfg.readFlashCB = libReadFlash;
     cfg.writeFlashCB = libWriteFlash;
+
+    //cfg.SelRTCClock = 1; // 32KHz LSI
 
     cfg.ConnectNumber =
         (config.ble.peripheral_max_connections & 3) | (config.ble.central_max_connections << 2);
@@ -35,8 +39,8 @@ var ble_config: c.bleConfig_t = blk: {
     cfg.rcCB = c.Lib_Calibration_LSI;
     cfg.MacAddr = config.ble.mac_addr;
 
-    cfg.WakeUpTime = WAKE_UP_RTC_MAX_TIME;
-    cfg.sleepCB = enterSleep;
+    //cfg.WakeUpTime = WAKE_UP_RTC_MAX_TIME;
+    //cfg.sleepCB = enterSleep;
 
     break :blk cfg;
 };
@@ -80,6 +84,8 @@ pub const TxPower = enum(u8) {
 };
 
 pub fn init() !void {
+    c.init_lle_irqlibhandlerlocation();
+
     try initBleModule();
     rtc.init();
     try tmos.init();

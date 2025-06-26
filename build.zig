@@ -191,6 +191,7 @@ pub fn build(b: *std.Build) void {
                 "src/platforms/ch59x/lib/libISP592.a",
                 "src/platforms/ch59x/lib/LIBCH59xBLE.a",
                 "src/platforms/ch59x/lib/calibration_lsi.c",
+                "src/platforms/ch59x/lib/lib_irq.c",
             }, &.{});
 
             exe.addIncludePath(.{ .path = "src/platforms/ch59x/lib" });
