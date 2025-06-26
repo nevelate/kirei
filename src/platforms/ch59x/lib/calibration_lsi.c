@@ -221,3 +221,8 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
     R16_INT32K_TUNE += cnt_offset;
     sys_safe_access_disable();
 }
+
+void Lib_Calibration_LSI(void)
+{
+  Calibration_LSI( Level_64 );
+}
